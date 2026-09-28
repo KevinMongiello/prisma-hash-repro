@@ -1,0 +1,124 @@
+[
+  {
+    "id": "column.public.User.hourlyRate",
+    "label": "Add column \"hourlyRate\" to \"User\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "hourlyRate",
+        "table": "User"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"hourlyRate\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "User",
+          "hourlyRate"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"hourlyRate\"",
+        "sql": "ALTER TABLE \"public\".\"User\" ADD COLUMN \"hourlyRate\" float8"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"hourlyRate\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "User",
+          "hourlyRate"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data_migration.backfill-User-hourlyRate",
+    "label": "Data transform: backfill-User-hourlyRate",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [
+      {
+        "description": "Check backfill-User-hourlyRate has work to do",
+        "sql": "SELECT EXISTS (SELECT \"id\" AS \"id\" FROM \"public\".\"User\" WHERE \"hourlyRate\" IS NULL LIMIT 1) AS ok",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "Run backfill-User-hourlyRate",
+        "sql": "UPDATE \"public\".\"User\" SET \"hourlyRate\" = $1, \"updatedAt\" = $2 WHERE \"hourlyRate\" IS NULL",
+        "params": [
+          25,
+          "2026-09-28T17:16:27.642Z"
+        ]
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "Verify backfill-User-hourlyRate resolved all violations",
+        "sql": "SELECT NOT EXISTS (SELECT \"id\" AS \"id\" FROM \"public\".\"User\" WHERE \"hourlyRate\" IS NULL LIMIT 1) AS ok",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "alterNullability.setNotNull.User.hourlyRate",
+    "label": "Set NOT NULL on \"User\".\"hourlyRate\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "hourlyRate",
+        "table": "User"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"hourlyRate\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "User",
+          "hourlyRate"
+        ]
+      },
+      {
+        "description": "ensure no NULL values in \"hourlyRate\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"User\" WHERE \"hourlyRate\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "set NOT NULL on \"hourlyRate\"",
+        "sql": "ALTER TABLE \"public\".\"User\" ALTER COLUMN \"hourlyRate\" SET NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"hourlyRate\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "User",
+          "hourlyRate",
+          "NO"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+npm ls prisma @prisma/orm-postgres 
+├── @prisma/orm-postgres@8.0.0-rc.12
+└── prisma@8.0.0-rc.17
+
+node -v
+v24.21.0
+npm -v
+11.19.0
+
+
+
+
+kevinmongiello@Kevins-MacBook-Pro prisma-hash-repro % node -v
+npm -v
+npx prisma --version
+npm ls prisma @prisma/orm-postgres @prisma/cli-engine
+v24.21.0
+11.19.0
+8.0.0-rc.17
+prisma-hash-repro@1.0.0 /Users/kevinmongiello/Documents/Dev/Terial/prisma-hash-repro
+├── @prisma/cli-engine@0.6.1
+├─┬ @prisma/orm-postgres@8.0.0-rc.12
+│ └─┬ @prisma/orm-toolchain@8.0.0-rc.12
+│   └── @prisma/cli-engine@0.6.1 deduped
+└─┬ prisma@8.0.0-rc.17
+  ├── @prisma/cli-engine@0.6.1 deduped
+  └─┬ @prisma/composer-cli@0.23.0
+    └── @prisma/cli-engine@0.6.1 deduped

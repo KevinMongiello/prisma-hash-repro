@@ -1,0 +1,23 @@
+{
+  "name": "prisma-hash-repro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "contract:emit": "prisma contract emit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@prisma/cli-engine": "^0.6.1",
+    "@types/node": "^26.6.3",
+    "prisma": "^8.0.0-rc.17"
+  },
+  "dependencies": {
+    "@prisma/orm-postgres": "^8.0.0-rc.12",
+    "dotenv": "^18.0.4"
+  }
+}
